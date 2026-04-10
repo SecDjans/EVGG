@@ -3,303 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EVG 2026 - ADRIATIC MISSIONS</title>
+    <title>EVG 2026 - THE GAUNTLET</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;700;900&display=swap');
-        body { background-color: #f8fafc; color: #1e293b; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .military-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.05em; }
-        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .checkbox-custom { width: 28px; height: 28px; border: 2px solid #0f172a; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #fff; flex-shrink: 0; }
-        .checked { background: #0f172a; border-color: #0f172a; }
-        .checked::after { content: '✓'; color: #fff; font-weight: 900; font-size: 16px; }
-        .sticky-nav { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border-bottom: 1px solid #e2e8f0; }
-        .tab-active { color: #0f172a; border-bottom: 3px solid #0f172a; font-weight: 900; }
-        .marie-photo { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #0f172a; object-fit: cover; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #0f172a; }
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;900&display=swap');
+        body { background-color: #f8fafc; color: #0f172a; font-family: 'Roboto', sans-serif; -webkit-tap-highlight-color: transparent; }
+        .military-font { font-family: 'Oswald', sans-serif; text-transform: uppercase; letter-spacing: 0.1em; }
+        .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .btn-cat { transition: all 0.2s; border: 2px solid #e2e8f0; text-align: left; }
+        .btn-cat:active { transform: scale(0.95); background-color: #f1f5f9; }
+        .marie-photo { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #0f172a; object-fit: cover; background: #fff; }
+        .modal-bg { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
+        .progress-circle { background: #0f172a; color: white; padding: 2px 10px; border-radius: 99px; font-weight: 900; font-size: 14px; }
     </style>
 </head>
-<body class="pb-10">
+<body class="flex flex-col min-h-screen">
 
-    <header class="p-4 bg-white border-b border-slate-200 flex items-center justify-between">
-        <div class="flex items-center gap-3">
+    <header class="p-6 bg-white border-b border-slate-200 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center gap-4">
             <img src="marie.jpg" alt="LM" class="marie-photo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="marie-photo" style="display:none;">LM</div>
+            <div class="marie-photo flex items-center justify-center font-bold text-slate-400" style="display:none;">LM</div>
             <div>
-                <h1 class="military-font text-2xl text-slate-950 leading-none">The Last Stand</h1>
-                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Opération Croatie 2026</p>
+                <h1 class="military-font text-2xl font-bold leading-none">The Last Stand</h1>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Score :</span>
+                    <span id="global-counter" class="progress-circle text-yellow-500">0</span>
+                </div>
             </div>
         </div>
-        <div class="text-[9px] text-right font-bold text-slate-400 uppercase tracking-tighter">"Ce qui se passe ici,<br>reste ici !"</div>
+        <div class="text-[9px] text-right font-bold text-slate-400 uppercase leading-tight italic">
+            "Ce qui se passe ici,<br>reste ici !"
+        </div>
     </header>
 
-    <nav class="sticky-nav flex overflow-x-auto whitespace-nowrap px-2 no-scrollbar">
-        <button onclick="showPlayer('GLOBAL')" id="nav-GLOBAL" class="px-5 py-4 font-bold text-xs uppercase text-slate-400 tab-active">🏆 Global</button>
-        <div id="player-tabs" class="flex"></div>
-    </nav>
-
-    <main id="section-GLOBAL" class="p-4 space-y-4">
-        <div id="leaderboard" class="space-y-3"></div>
-        <div class="text-center pt-10 opacity-10">
-            <button onclick="confirmReset()" class="text-[8px] font-bold uppercase tracking-widest text-red-700 underline">Reset Database</button>
+    <main id="section-select" class="flex-1 p-6 flex flex-col items-center justify-center space-y-4">
+        <div class="text-center mb-2">
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Désigne ton co-pilote</p>
+            <h2 class="military-font text-xl">Choisis le secteur :</h2>
         </div>
+
+        <div class="w-full max-w-sm space-y-3">
+            <button onclick="getRandomChallenge('SPORT')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-blue-50 border-blue-200 shadow-sm shadow-blue-100">
+                <span class="text-2xl">💪</span>
+                <span class="font-black text-blue-800 uppercase text-sm tracking-widest">Secteur Sport</span>
+            </button>
+
+            <button onclick="getRandomChallenge('BAR')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-orange-50 border-orange-200 shadow-sm shadow-orange-100">
+                <span class="text-2xl">🍺</span>
+                <span class="font-black text-orange-800 uppercase text-sm tracking-widest">Secteur Bar</span>
+            </button>
+
+            <button onclick="getRandomChallenge('SOCIAL')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-purple-50 border-purple-200 shadow-sm shadow-purple-100">
+                <span class="text-2xl">🤝</span>
+                <span class="font-black text-purple-800 uppercase text-sm tracking-widest">Secteur Social</span>
+            </button>
+
+            <button onclick="getRandomChallenge('AMITIE')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-emerald-50 border-emerald-200 shadow-sm shadow-emerald-100">
+                <span class="text-2xl">🧠</span>
+                <span class="font-black text-emerald-800 uppercase text-sm tracking-widest">Secteur Amitié</span>
+            </button>
+
+            <button onclick="getRandomChallenge('PHOTOS')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-rose-50 border-rose-200 shadow-sm shadow-rose-100">
+                <span class="text-2xl">📸</span>
+                <span class="font-black text-rose-800 uppercase text-sm tracking-widest">Photos & Vidéos</span>
+            </button>
+        </div>
+        
+        <button onclick="confirmReset()" class="pt-8 text-[8px] font-bold text-slate-300 uppercase tracking-widest">Réinitialiser le compteur</button>
     </main>
 
-    <main id="section-PLAYER" class="hidden p-4">
-        <div class="mb-6 card p-5 border-slate-200 bg-slate-50 flex justify-between items-center">
-            <div>
-                <h2 id="viewing-player-name" class="military-font text-3xl text-slate-950 uppercase leading-none">NOM</h2>
-                <p id="player-rank" class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mt-1 italic">Chargement...</p>
-            </div>
-            <div class="text-right leading-none">
-                <span id="player-progress-count" class="text-4xl font-black text-slate-950 italic">0</span><span class="text-slate-400 font-bold text-lg">/20</span>
+    <div id="modal-challenge" class="hidden fixed inset-0 modal-bg flex items-center justify-center p-6 z-[100]">
+        <div class="card w-full max-w-md p-8 text-center border-2 border-slate-900 shadow-2xl">
+            <div id="modal-icon" class="text-5xl mb-4">📍</div>
+            <p id="modal-cat" class="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em] mb-6">CATEGORIE</p>
+            <h3 id="modal-text" class="text-xl font-black leading-tight mb-8 min-h-[120px] flex items-center justify-center px-4 italic">...</h3>
+            <div class="space-y-3">
+                <button onclick="validateMission()" class="w-full py-5 bg-slate-900 text-white rounded-2xl font-black text-lg uppercase tracking-widest active:scale-95 transition-transform shadow-lg">MISSION RÉUSSIE ✅</button>
+                <button onclick="closeModal()" class="w-full py-3 bg-red-50 text-red-600 rounded-xl font-bold text-xs uppercase tracking-widest border border-red-100">ÉCHEC / ANNULER ❌</button>
             </div>
         </div>
-        <div id="challenges-list" class="space-y-3"></div>
-    </main>
+    </div>
 
     <script>
-        const playersNames = ["Le Marié", "Djany", "Thibault", "Bastien", "J-M", "Djessy", "Flo"];
-        
-        const missions = {
-            "Le Marié": [
-                "Bateau : Prendre un selfie 'épique' à l'avant du bateau avec tout le groupe derrière.",
-                "Rafting : Faire un check de pagaies avec chaque membre de l'équipe avant le départ.",
-                "Villa : Faire 15 pompes au bord de la piscine pendant que les autres applaudissent.",
-                "Anecdote : Raconter l'instant précis où tu as su que tu allais demander sa main.",
-                "Bar : Faire un toast en croate (Zivjeli !) en citant un souvenir marquant avec chacun.",
-                "Sport : Organiser une course de 10 mètres dans l'eau contre Bastien.",
-                "Bateau : Porter le chapeau le plus ridicule du groupe pendant 20 minutes.",
-                "Dégustation : Raconter ta pire anecdote de 'première rencontre' avec tes beaux-parents.",
-                "Piscine : Faire un plongeon jugé par le groupe sur 10 (style ou drôlerie).",
-                "Souvenir : Qui ici t'as donné ton premier conseil de vie de 'grand' ?",
-                "Villa : Réussir à ne pas dire le mot 'OUI' pendant 30 minutes. Gage si perdu.",
-                "Photo : Prendre un selfie avec un inconnu croate et lui souhaiter 'Dobar dan'.",
-                "Anecdote : Raconter ta plus grosse bêtise d'enfance à J-M.",
-                "Club : Faire une démo de ton meilleur 'dance move' au milieu du cercle.",
-                "Villa : Désigner le 'MVP' (le plus utile) de l'organisation de cet EVG.",
-                "Voiture : Faire le DJ et passer une chanson qui rappelle vos années lycée.",
-                "Bateau : Expliquer ton plus grand challenge pour l'année à venir.",
-                "Spa : Raconter une anecdote sur Djessy que personne d'autre ne connaît.",
-                "Rafting : Crier 'POUR LA LIBERTÉ' juste avant un rapide.",
-                "Dîner : Citer la qualité que tu apprécies le plus chez Flo."
+        const challenges = {
+            SPORT: [
+                "Faire 20 pompes synchronisées avec ton co-pilote.",
+                "Course de 20 mètres : le perdant porte le gagnant sur son dos.",
+                "Faire une 'chaise' contre un mur : le premier qui lâche a un gage.",
+                "Faire 15 squats en tenant les mains de ton co-pilote.",
+                "Faire 10 sauts groupés (genoux poitrine) en même temps.",
+                "Porter ton co-pilote en mode 'princesse' sur 10 mètres.",
+                "Faire 30 secondes de gainage pendant que les autres comptent.",
+                "Trouver un objet lourd et le soulever 10 fois à deux.",
+                "Sprint de 50m : ton co-pilote te donne 5 secondes d'avance.",
+                "Tenir en équilibre sur une jambe, face à face, le plus longtemps possible.",
+                "Faire 20 montées de genoux ultra rapides ensemble.",
+                "Faire un combat de 'pousse-mains' en équilibre sur une jambe.",
+                "Réussir 5 pompes claquées (ou tentatives).",
+                "Faire la brouette sur 10 mètres avec ton co-pilote.",
+                "Faire 20 fentes sautées synchronisées.",
+                "Tenir en planche, ton co-pilote doit te sauter par dessus 3 fois.",
+                "Faire 10 burpees le plus vite possible.",
+                "Essayer de toucher le plafond ou une branche haute en sautant.",
+                "Faire 20 secondes de boxe imaginaire (shadow boxing) ensemble.",
+                "Faire une course de chenille (assis l'un derrière l'autre) sur 5m.",
+                "Course de reculons sur 20 mètres.",
+                "Faire 10 pompes avec une seule main au sol (ou essayer).",
+                "Tenir en équilibre 'avion' sur une jambe pendant 30 secondes.",
+                "Sauter 10 fois le plus haut possible en criant un cri de guerre.",
+                "Faire la course en sautant à cloche-pied sur 15 mètres."
             ],
-            "Djany": [
-                "Sport : Faire 15 pompes dès que tu vois un drapeau croate.",
-                "Photo : Prendre un selfie de groupe où tout le monde imite ta tête préférée.",
-                "Bateau : Réussir à faire un check à un autre bateau qui passe.",
-                "Anecdote : Raconter ton premier souvenir marquant avec le Marié.",
-                "Villa : Faire un combat de 'poussée' dans la piscine contre Thibault.",
-                "Bar : Commander une tournée avec un accent québécois parfait.",
-                "Souvenir : Quelle est la chanson qui te rappelle systématiquement une soirée avec Flo ?",
-                "Rafting : Pagayer uniquement à une main pendant 30 secondes en mode pro.",
-                "Villa : Raconter ton talent caché le plus inutile mais drôle.",
-                "Photo : Prendre en photo l'objet le plus insolite du bar.",
-                "Dégustation : Décrire ton vin en utilisant uniquement des termes de sport.",
-                "Sport : Faire 20 squats avant de pouvoir toucher à l'apéro.",
-                "Anecdote : Raconter une fois où tu as vraiment galéré en voyage.",
-                "Villa : Qui dans le groupe a, selon toi, le plus changé avec l'âge ?",
-                "Bateau : Repérer une île et lui donner le nom d'un membre du groupe.",
-                "Spa : Expliquer les bienfaits du sauna à Bastien de façon très sérieuse.",
-                "Club : Faire un high-five à un inconnu qui danse bien.",
-                "Voiture : Ne pas dire un mot pendant 10 minutes (pari avec le Marié).",
-                "Souvenir : Quelle est ta pire expérience culinaire en vacances ?",
-                "Villa : Raconter ton meilleur souvenir de soirée avec J-M."
+            BAR: [
+                "Prendre un shot cul-sec en même temps que ton co-pilote.",
+                "Commander une boisson avec un accent étranger au choix.",
+                "Boire votre verre sans jamais plier le coude (bras tendu).",
+                "Donner un nom ridicule à la prochaine tournée.",
+                "Faire un toast de 30 secondes en l'honneur de ton co-pilote.",
+                "Boire uniquement avec votre main non-dominante pendant 10 min.",
+                "Toucher le fond de votre verre avec le nez avant de le finir.",
+                "Le groupe choisit une règle débile pour votre prochain verre.",
+                "Pierre-Feuille-Ciseaux : le perdant finit le verre de l'autre.",
+                "Commander deux verres en chuchotant de manière suspecte.",
+                "Boire son verre cul-sec en gardant les yeux fermés.",
+                "Faire semblant d'être un critique de vin/bière pour votre boisson.",
+                "Demander au barman quelle est sa boisson la moins vendue et la goûter.",
+                "Faire un check de verres 'complexe' avant chaque gorgée.",
+                "Boire son verre à la paille le plus vite possible.",
+                "Inventer une légende croate sur votre boisson actuelle.",
+                "Faire un toast en rimes (min. 4 lignes).",
+                "Finir son verre sans jamais le poser sur la table.",
+                "Commander une boisson et la dégustez 'au ralenti' (slow-motion).",
+                "Boire cul-sec un verre d'eau glacée."
             ],
-            "Thibault": [
-                "Sport : Faire 10 pompes dès qu'on change de lieu (Bar, Villa, Bateau).",
-                "Photo : Prendre un selfie avec le Marié en imitant une statue croate.",
-                "Piscine : Faire une bombe monumentale pour arroser tout le monde.",
-                "Anecdote : Raconter ta première rencontre avec le Marié.",
-                "Villa : Faire un discours de 30 secondes sur 'Pourquoi la bière croate est bonne'.",
-                "Rafting : Pagayer avec les mains pendant 10 secondes.",
-                "Souvenir : Quel est le voyage que tu as fait et qui t'a le plus marqué ?",
-                "Bar : Commander un shot cul-sec en mode 'Robot'.",
-                "Villa : Si tu gagnais 1 million, quelle est la première connerie que tu achètes ?",
-                "Photo : Prendre une photo de l'équipe en mode 'affiche de film d'action'.",
-                "Sport : Faire la chaise contre un mur pendant que les autres trinquent.",
-                "Anecdote : Raconter un souvenir d'école ou de collège avec Bastien.",
-                "Dégustation : Faire tourner son verre de vin pendant 1 min sans s'arrêter.",
-                "Club : Proposer une battle de danse à Djany.",
-                "Bateau : Faire une photo style 'Alerte à Malibu' sur le pont.",
-                "Villa : Citer une qualité que tu envies chez l'un d'entre nous.",
-                "Spa : Raconter ton rituel du matin pour être d'attaque en voyage.",
-                "Voiture : Faire le copilote et annoncer les virages comme en rallye.",
-                "Souvenir : Quel est ton film culte que tu peux regarder 100 fois ?",
-                "Villa : Raconter ton plus gros fou rire du séjour jusqu'ici."
+            SOCIAL: [
+                "Prendre un selfie avec un inconnu (co-pilote en arrière-plan).",
+                "Faire un High Five à 3 inconnus différents.",
+                "Demander à un inconnu qui est le plus beau gosse entre vous deux.",
+                "Faire croire à quelqu'un que vous êtes des jumeaux séparés.",
+                "Demander une recommandation de lieu et s'y rendre direct.",
+                "Faire un compliment collectif à un passant.",
+                "Réussir à faire crier 'Vive le Marié' à un groupe d'inconnus.",
+                "Aborder quelqu'un et lui demander le secret d'une amitié longue.",
+                "Faire une photo 'affiche de film' avec un inconnu.",
+                "Convaincre quelqu'un que vous tournez un vlog voyage.",
+                "Demander à un inconnu de vous apprendre un mot en croate.",
+                "Faire une 'ola' avec au moins 2 inconnus dans un lieu public.",
+                "Demander à quelqu'un son film préféré et pourquoi.",
+                "Demander à un inconnu de choisir le prochain défi du groupe.",
+                "Faire croire à quelqu'un que le Marié est une star de TikTok.",
+                "Obtenir un autographe d'un inconnu sur un bout de serviette.",
+                "Proposer un Pierre-Feuille-Ciseaux à un inconnu dans la rue.",
+                "Faire une haie d'honneur pour un inconnu qui passe.",
+                "Demander à une table voisine de porter un toast avec vous.",
+                "Récupérer le nom et le prénom de 3 personnes croates différentes."
             ],
-            "Bastien": [
-                "Sport : Faire 10 squats avec le Marié sur les épaules (ou essayer).",
-                "Photo : Prendre un selfie avec un inconnu et lui faire croire que tu es célèbre.",
-                "Bateau : Crier 'TERRE EN VUE' dès qu'on approche d'une île.",
-                "Anecdote : Raconter une situation où tu as dû improviser totalement.",
-                "Villa : Réussir un salto (ou une tentative) dans la piscine.",
-                "Bar : Faire un toast spécial pour la future mariée.",
-                "Souvenir : Quel est ton plus grand succès personnel de l'année ?",
-                "Rafting : Arroser Djessy discrètement avec ta pagaie.",
-                "Villa : Quel est le job de tes rêves quand tu étais gamin ?",
-                "Photo : Prendre une photo de chaque participant en train de manger.",
-                "Dégustation : Comparer le vin croate à un vin de ta région.",
-                "Sport : Faire 15 pompes au milieu d'une place publique.",
-                "Anecdote : Raconter ta rencontre avec Thibault.",
-                "Villa : Qui ici est le plus susceptible de finir ministre ?",
-                "Bateau : Garder ses lunettes de soleil même quand il n'y a plus de soleil.",
-                "Spa : Tenir 30 secondes dans l'eau la plus froide du complexe.",
-                "Club : Aller demander une chanson ringarde au DJ.",
-                "Voiture : Faire un compliment sur la conduite de celui qui conduit.",
-                "Souvenir : Quel est ton plat 'confort' après une grosse soirée ?",
-                "Villa : Si tu devais échanger ta vie avec un membre du groupe 24h, ce serait qui ?"
+            AMITIE: [
+                "Raconter à ton co-pilote ton meilleur souvenir avec lui.",
+                "Citer une qualité que tu admires chez ton co-pilote.",
+                "Raconter la pire bêtise que vous avez faite ensemble.",
+                "Désigner qui est le plus 'casse-cou' entre vous deux.",
+                "Expliquer ta première impression en rencontrant ton co-pilote.",
+                "Raconter une anecdote de soirée épique vécue ensemble.",
+                "Citer un point commun que vous seuls avez.",
+                "Désigner ton co-pilote comme ton 'témoin de survie'.",
+                "Raconter ton plus gros fou rire avec la personne à ta gauche.",
+                "Donner un conseil de vie important à ton co-pilote.",
+                "Dire ce que tu envies le plus (positivement) chez ton co-pilote.",
+                "Raconter la fois où ton co-pilote t'a le plus impressionné.",
+                "Si vous deviez monter un business ensemble, ce serait quoi ?",
+                "Citer le défaut le plus drôle de ton co-pilote.",
+                "Raconter une anecdote d'enfance que ton co-pilote ne connaît pas.",
+                "Quel est le voyage que vous devez absolument faire ensemble un jour ?",
+                "Dévoiler la chanson que vous chanteriez en duo au karaoké.",
+                "Raconter votre rencontre la plus improbable.",
+                "Qui de vous deux serait le premier à être arrêté en voyage ?",
+                "Faire un pacte secret (débile) pour les 10 prochaines années."
             ],
-            "J-M": [
-                "Sport : Faire 20 abdos sur ton transat devant tout le monde.",
-                "Photo : Prendre un selfie de groupe où tout le monde ferme les yeux.",
-                "Bateau : Faire un plongeon synchronisé avec le Marié.",
-                "Anecdote : Comment tu imagines la vie du Marié dans 10 ans ?",
-                "Villa : Porter son maillot de bain par-dessus son short pendant 10 minutes.",
-                "Bar : Faire un check à 5 inconnus en moins d'une minute.",
-                "Souvenir : Raconter ton plus beau souvenir de vacances en famille.",
-                "Rafting : Proposer de changer de place avec l'instructeur croate.",
-                "Villa : Quel est ton plus grand rêve pour les 10 prochaines années ?",
-                "Photo : Prendre en photo le verre le plus vide de la table.",
-                "Dégustation : Raconter une anecdote liée à une fête de famille épique.",
-                "Sport : Faire 10 fentes en marchant pour aller chercher à boire.",
-                "Anecdote : Raconter ta rencontre avec Bastien.",
-                "Club : Faire le tour du club en mode 'Marche Militaire'.",
-                "Bateau : Dire 'On est pas bien là ?' toutes les 15 minutes.",
-                "Voiture : Chanter un tube d'Aznavour à fond les ballons.",
-                "Souvenir : Citer une qualité que tu admires chez Djany.",
-                "Spa : Si tu pouvais avoir un super-pouvoir, lequel choisirais-tu ?",
-                "Piscine : Récupérer un objet au fond de l'eau avec les orteils.",
-                "Villa : Raconter ta passion secrète la plus inattendue."
-            ],
-            "Djessy": [
-                "Sport : Faire 15 pompes dès que le Marié reçoit un message sur son tel.",
-                "Photo : Réussir à faire faire une grimace à un inconnu sur une photo.",
-                "Bateau : Faire un plongeon 'plat' volontaire (ou presque).",
-                "Anecdote : Raconter une fois où tu as eu une peur bleue dans ta vie.",
-                "Villa : Faire le garde du corps du Marié pendant 15 minutes.",
-                "Bar : Commander un shot de Rakija (local) sans aucune grimace.",
-                "Souvenir : Quelle est ta définition d'un week-end parfait entre potes ?",
-                "Rafting : Être celui qui crie le plus fort dans le bateau.",
-                "Villa : Quel est ton plus grand succès professionnel récent ?",
-                "Photo : Prendre en photo le Marié quand il ne s'y attend pas.",
-                "Dégustation : Si tu devais ouvrir un bar, il s'appellerait comment ?",
-                "Sport : Faire la planche sur l'eau pendant 1 min sans bouger.",
-                "Anecdote : Raconter un souvenir marquant avec Flo.",
-                "Club : Faire un move de breakdance (ou tentative) au milieu.",
-                "Bateau : Saluer tous les autres bateaux que vous croisez.",
-                "Spa : Faire une trace de doigt sur un miroir plein de buée.",
-                "Voiture : Pointer chaque palmier croate et dire 'Palmier !'.",
-                "Souvenir : Quel est le film culte que tu as vu 50 fois ?",
-                "Piscine : Faire une longueur entière en nage indienne (un bras).",
-                "Villa : Quel est le moment de ce séjour qui t'a le plus surpris ?"
-            ],
-            "Flo": [
-                "Sport : Faire 20 pompes devant l'entrée d'un restaurant.",
-                "Photo : Prendre un selfie 'romantique' avec Bastien au coucher du soleil.",
-                "Bateau : Faire le guetteur à l'avant du bateau pendant 5 minutes.",
-                "Anecdote : Raconter ta toute première rencontre avec le Marié.",
-                "Villa : Être celui qui prépare l'apéro pour tout le monde.",
-                "Bar : Raconter une anecdote marquante avec Thibault.",
-                "Souvenir : Quel est le voyage que tu as fait et qui t'a changé ?",
-                "Rafting : Faire un check de pagaie au-dessus de ta tête.",
-                "Villa : Quelle est ta plus grande fierté de l'année passée ?",
-                "Photo : Prendre une photo d'un monument croate avec un chapeau dessus.",
-                "Dégustation : Deviner la couleur du vin au goût (yeux fermés).",
-                "Sport : Faire 10 squats en portant le Marié (ou essayer).",
-                "Anecdote : Raconter une histoire de fantôme de 1 minute au groupe.",
-                "Club : Proposer une tournée de shots 'Special Flo'.",
-                "Bateau : Faire une sieste de 10 min pile sur le pont au soleil.",
-                "Spa : Quel est ton remède ultime contre le stress ?",
-                "Voiture : Faire le bruit du GPS ('Faites demi-tour dès que possible').",
-                "Souvenir : Quel est ton plus beau souvenir d'enfance lié à la mer ?",
-                "Piscine : Qui ici a la meilleure répartie du groupe ?",
-                "Villa : Quelle est la chose la plus folle que tu aies faite par amour ?"
+            PHOTOS: [
+                "Faire une photo 'couverture de magazine' avec ton co-pilote.",
+                "Reproduire une scène de film culte en photo.",
+                "Faire une photo de groupe façon équipe de foot.",
+                "Faire une photo où tout le monde saute en même temps.",
+                "Faire une photo 'album de vacances' avec des inconnus.",
+                "Faire une photo où vous regardez tous dans une direction différente.",
+                "Faire une photo 'avant / après soirée' (à refaire plus tard).",
+                "Faire une photo ultra sérieuse… dans une situation ridicule.",
+                "Faire une photo façon 'influenceur lifestyle'.",
+                "Faire une photo avec un inconnu qui pose comme si c’était un pote.",
+                "Faire une vidéo où vous annoncez une fausse breaking news.",
+                "Faire une vidéo interview du marié.",
+                "Faire une vidéo type vlog 'Bienvenue dans notre EVG'.",
+                "Faire une vidéo où chacun dit un mot pour le futur marié.",
+                "Faire une vidéo au ralenti en marchant comme des boss.",
+                "Faire une photo avec un objet improbable trouvé autour de vous.",
+                "Faire une photo 'spy team' (mode agents secrets).",
+                "Faire une photo en mode 'gang'.",
+                "Faire une photo romantique exagérée entre potes.",
+                "Faire une photo où vous imitez une pub connue.",
+                "Faire une vidéo où vous dansez tous ensemble.",
+                "Faire une vidéo TikTok improvisée.",
+                "Faire une vidéo où vous faites semblant d’être bourrés (même sobres).",
+                "Faire une vidéo 'challenge débile' inventé sur le moment.",
+                "Faire une photo avec le plus de monde possible dedans.",
+                "Faire une photo où chacun fait une grimace différente.",
+                "Faire une photo 'pyramide humaine'.",
+                "Faire une photo où tout le monde porte quelqu’un.",
+                "Faire une photo où vous imitez le marié.",
+                "Faire une photo du marié en mode 'roi'.",
+                "Faire une photo du marié porté par le groupe.",
+                "Faire une vidéo où vous racontez votre meilleur souvenir avec le marié.",
+                "Faire une vidéo message pour le futur (à regarder dans 5 ans).",
+                "Faire une photo artistique (ombres, reflet, etc.).",
+                "Faire une photo 'cinéma dramatique'.",
+                "Faire une photo en noir et blanc stylée.",
+                "Faire une vidéo 'présentation des joueurs' comme au foot.",
+                "Faire une vidéo où chacun a un surnom ridicule.",
+                "Faire une photo avec un maximum de sourires forcés.",
+                "Faire une photo 'photo de famille'.",
+                "Faire une photo 'classe de primaire'.",
+                "Faire une vidéo où vous criez tous 'VIVE LE MARIÉ'.",
+                "Faire une vidéo avec un cri de guerre inventé.",
+                "Faire une photo avec quelqu’un qui ne comprend rien à ce qu’il se passe.",
+                "Faire une photo en mode paparazzi du marié.",
+                "Faire une photo 'moment épique' (comme une affiche de film).",
+                "Faire une vidéo teaser de votre soirée."
             ]
         };
 
-        const STORAGE_KEY = 'evg_2026_adriatic_v2';
-        let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-            players: playersNames.reduce((acc, name) => {
-                acc[name] = { done: Array(20).fill(false), score: 0 };
-                return acc;
-            }, {})
-        };
+        const icons = { SPORT: "💪", BAR: "🍺", SOCIAL: "🤝", AMITIE: "🧠", PHOTOS: "📸" };
+        let count = parseInt(localStorage.getItem('evg_gauntlet_score')) || 0;
+        document.getElementById('global-counter').innerText = count;
 
-        function init() {
-            const tabs = document.getElementById('player-tabs');
-            tabs.innerHTML = playersNames.map(name => `
-                <button onclick="showPlayer('${name}')" id="nav-${name}" class="px-5 py-4 font-bold text-xs uppercase text-slate-400 transition-all">${name}</button>
-            `).join('');
-            renderLeaderboard();
+        function getRandomChallenge(cat) {
+            const list = challenges[cat];
+            const challenge = list[Math.floor(Math.random() * list.length)];
+            document.getElementById('modal-icon').innerText = icons[cat];
+            document.getElementById('modal-cat').innerText = "SECTEUR " + cat;
+            document.getElementById('modal-text').innerText = challenge;
+            document.getElementById('modal-challenge').classList.remove('hidden');
         }
 
-        function showPlayer(name) {
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('tab-active', 'text-slate-950'));
-            document.getElementById('nav-' + name).classList.add('tab-active', 'text-slate-950');
-            if (name === 'GLOBAL') {
-                document.getElementById('section-GLOBAL').classList.remove('hidden');
-                document.getElementById('section-PLAYER').classList.add('hidden');
-                renderLeaderboard();
-            } else {
-                document.getElementById('section-GLOBAL').classList.add('hidden');
-                document.getElementById('section-PLAYER').classList.remove('hidden');
-                renderPlayerList(name);
+        function validateMission() {
+            count++;
+            localStorage.setItem('evg_gauntlet_score', count);
+            document.getElementById('global-counter').innerText = count;
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('modal-challenge').classList.add('hidden');
+        }
+
+        function confirmReset() {
+            if(confirm("Réinitialiser le score à zéro ?")) {
+                count = 0;
+                localStorage.setItem('evg_gauntlet_score', 0);
+                document.getElementById('global-counter').innerText = 0;
             }
-            window.scrollTo(0,0);
         }
-
-        function renderPlayerList(name) {
-            document.getElementById('viewing-player-name').innerText = name;
-            const list = document.getElementById('challenges-list');
-            const pData = state.players[name];
-            const pMissions = missions[name];
-            document.getElementById('player-progress-count').innerText = pData.score;
-            
-            const sortedNames = Object.entries(state.players).sort((a,b) => b[1].score - a[1].score).map(x => x[0]);
-            const rank = sortedNames.indexOf(name) + 1;
-            document.getElementById('player-rank').innerText = `Position: ${rank}${rank === 1 ? 'er' : 'ème'}`;
-
-            list.innerHTML = pMissions.map((task, idx) => `
-                <div onclick="toggleTask('${name}', ${idx})" class="card p-4 flex items-center gap-4 active:scale-[0.98] transition-all ${pData.done[idx] ? 'bg-slate-50 opacity-60' : ''}">
-                    <div class="checkbox-custom ${pData.done[idx] ? 'checked' : ''}"></div>
-                    <p class="text-sm font-medium leading-tight ${pData.done[idx] ? 'text-slate-400 line-through' : 'text-slate-800'}">${task}</p>
-                </div>
-            `).join('');
-        }
-
-        function toggleTask(playerName, taskIdx) {
-            const p = state.players[playerName];
-            p.done[taskIdx] = !p.done[taskIdx];
-            p.score = p.done.filter(x => x).length;
-            save();
-            renderPlayerList(playerName);
-        }
-
-        function renderLeaderboard() {
-            const container = document.getElementById('leaderboard');
-            const allEntries = Object.entries(state.players);
-            const marieEntry = allEntries.find(e => e[0] === "Le Marié");
-            const othersSorted = allEntries.filter(e => e[0] !== "Le Marié").sort((a, b) => b[1].score - a[1].score);
-            const finalOrder = [marieEntry, ...othersSorted];
-
-            container.innerHTML = finalOrder.map(([name, data], idx) => `
-                <div class="flex items-center justify-between p-4 card ${name === "Le Marié" ? 'border-slate-950 bg-slate-50 shadow-md ring-1 ring-slate-200' : ''}">
-                    <div class="flex items-center gap-4">
-                        <span class="military-font text-xl ${name === "Le Marié" ? 'text-slate-950' : 'text-slate-300'}">${name === "Le Marié" ? '⭐' : '#' + idx}</span>
-                        <span class="font-black text-sm uppercase text-slate-950">${name}</span>
-                    </div>
-                    <div class="text-right">
-                        <span class="font-black text-2xl ${name === "Le Marié" ? 'text-slate-950' : 'text-slate-950'}">${data.score}</span>
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">/20</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-        function confirmReset() { if(confirm("Supprimer la progression ?")) { localStorage.removeItem(STORAGE_KEY); location.reload(); } }
-
-        init();
     </script>
 </body>
 </html>
