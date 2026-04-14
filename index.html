@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EVG 2026 - THE GAUNTLET</title>
+    <title>EVG 2026 - HUGOOOO</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Roboto:wght@400;900&display=swap');
@@ -15,6 +15,7 @@
         .marie-photo { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #0f172a; object-fit: cover; background: #fff; }
         .modal-bg { background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px); }
         .progress-circle { background: #0f172a; color: white; padding: 2px 10px; border-radius: 99px; font-weight: 900; font-size: 14px; }
+        .copilote-badge { background: #fef08a; color: #854d0e; padding: 4px 12px; border-radius: 8px; font-weight: 900; border: 1px solid #facc15; }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -31,26 +32,32 @@
                 </div>
             </div>
         </div>
-        <div class="text-[9px] text-right font-bold text-slate-400 uppercase leading-tight italic">
-            "Ce qui se passe ici,<br>reste ici !"
+        <div class="text-[11px] text-right font-bold text-slate-400 uppercase leading-tight italic">
+            "Ce qui se passe en croatie, reste en croatie !"
         </div>
     </header>
 
     <main id="section-select" class="flex-1 p-6 flex flex-col items-center justify-center space-y-4">
         <div class="text-center mb-2">
-            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Désigne ton co-pilote</p>
+            <p class="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em] mb-1">Co-pilote assigné :</p>
+            <div id="current-copilote" class="military-font text-2xl copilote-badge mb-4 inline-block">CHARGEMENT...</div>
             <h2 class="military-font text-xl">Choisis le secteur :</h2>
         </div>
 
         <div class="w-full max-w-sm space-y-3">
             <button onclick="getRandomChallenge('SPORT')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-blue-50 border-blue-200 shadow-sm shadow-blue-100">
                 <span class="text-2xl">💪</span>
-                <span class="font-black text-blue-800 uppercase text-sm tracking-widest">Secteur Sport</span>
+                <span class="font-black text-blue-800 uppercase text-sm tracking-widest">Secteur Sport (Dans la rue)</span>
             </button>
 
             <button onclick="getRandomChallenge('BAR')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-orange-50 border-orange-200 shadow-sm shadow-orange-100">
                 <span class="text-2xl">🍺</span>
                 <span class="font-black text-orange-800 uppercase text-sm tracking-widest">Secteur Bar</span>
+            </button>
+
+            <button onclick="getRandomChallenge('VERITE')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-indigo-50 border-indigo-200 shadow-sm shadow-indigo-100">
+                <span class="text-2xl">🤐</span>
+                <span class="font-black text-indigo-800 uppercase text-sm tracking-widest">Secteur Vérité</span>
             </button>
 
             <button onclick="getRandomChallenge('SOCIAL')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-purple-50 border-purple-200 shadow-sm shadow-purple-100">
@@ -69,7 +76,7 @@
             </button>
         </div>
         
-        <button onclick="confirmReset()" class="pt-8 text-[8px] font-bold text-slate-300 uppercase tracking-widest">Réinitialiser le compteur</button>
+        <button onclick="confirmReset()" class="pt-8 text-[8px] font-bold text-slate-300 uppercase tracking-widest">Réinitialiser le compteur et la rotation</button>
     </main>
 
     <div id="modal-challenge" class="hidden fixed inset-0 modal-bg flex items-center justify-center p-6 z-[100]">
@@ -85,6 +92,9 @@
     </div>
 
     <script>
+        // --- CONFIGURATION ---
+        const participants = ["Thibault", "Flo", "Bastien", "Djessy", "J-M", "Djany"];
+        
         const challenges = {
             SPORT: [
                 "Faire 20 pompes synchronisées avec ton co-pilote.",
@@ -116,42 +126,71 @@
             BAR: [
                 "Prendre un shot cul-sec en même temps que ton co-pilote.",
                 "Commander une boisson avec un accent étranger au choix.",
-                "Boire votre verre sans jamais plier le coude (bras tendu).",
+                "Cul sec en ayant aucune réaction (poker face).",
                 "Donner un nom ridicule à la prochaine tournée.",
-                "Faire un toast de 30 secondes en l'honneur de ton co-pilote.",
+                "Le copilot dois faire un toast en l'honneur du marié.",
                 "Boire uniquement avec votre main non-dominante pendant 10 min.",
+                "Racontez une blague nulle. Si ça fait rire, t’es sauvé. Sinon = shot",
                 "Toucher le fond de votre verre avec le nez avant de le finir.",
                 "Le groupe choisit une règle débile pour votre prochain verre.",
                 "Pierre-Feuille-Ciseaux : le perdant finit le verre de l'autre.",
                 "Commander deux verres en chuchotant de manière suspecte.",
                 "Boire son verre cul-sec en gardant les yeux fermés.",
+                Faire un compliment sincère à un pote sinon 2 gorgés (on a dit sincère hein),
+                "Montrer la dernière photo dans ton téléphone (si refus = 2 shots)"
                 "Faire semblant d'être un critique de vin/bière pour votre boisson.",
                 "Demander au barman quelle est sa boisson la moins vendue et la goûter.",
-                "Faire un check de verres 'complexe' avant chaque gorgée.",
+                "Dire un secret perso à chaque gorgé pendant 5min",
                 "Boire son verre à la paille le plus vite possible.",
                 "Inventer une légende croate sur votre boisson actuelle.",
                 "Faire un toast en rimes (min. 4 lignes).",
-                "Finir son verre sans jamais le poser sur la table.",
-                "Commander une boisson et la dégustez 'au ralenti' (slow-motion).",
-                "Boire cul-sec un verre d'eau glacée."
+            ],
+            VERITE: [
+                "Le truc le plus bizarre que tu fais quand tu es seul ?",
+                "As-tu déjà parlé tout seul sérieusement ?",
+                "La chose la plus ridicule que tu as faite devant un miroir ?",
+                "Ton délire le plus chelou que personne ne connaît ?",
+                "As-tu déjà reniflé tes vêtements pour voir s’ils étaient propres ? 😄",
+                "Le truc le plus inutile que tu sais faire ?",
+                "La pire excuse que tu as utilisée ?",
+                "Le moment où tu t’es senti vraiment idiot",
+                "Ton habitude la plus gênante ?",
+                "As-tu déjà ri à un moment totalement inapproprié ?",
+                "Le truc le plus bizarre que tu as mangé ?",
+                "As-tu déjà chanté très fort tout seul ?",
+                "Le truc le plus honteux que tu fais sur ton téléphone",
+                "Le truc le plus bizarre que tu fais quand tu t’ennuies",
+                "As-tu déjà googlé un truc très bizarre ?",
+                "Le moment où tu as paniqué pour rien",
+                "Une peur ridicule que tu as",
+                "Le truc le plus étrange que tu fais quand tu es fatigué",
+                "Le pire moment où tu as eu un blanc total",
+                "Le truc le plus inutile que tu fais tous les jours",
+                "Une chose que tu fais mais que tu n’assumerais pas devant tout le monde",
+                "Le dernier truc ridicule que tu as fait sans t’en rendre compte",
+                "Le moment où tu as été le plus maladroit",
+                "Ton pire moment de honte en public",
+                "Le truc le plus bizarre que tu fais avant de dormir",
+                "As-tu déjà raconté une histoire en exagérant beaucoup ?",
+                "Le moment où tu a le plus surjoué une situation",
+                "Le truc le plus étrange que tu fais quand tu es stressé",
+                "As-tu déjà jugé quelqu’un… puis fait exactement pareil ? 😅",
+                "Une chose ridicule que tu fais encore aujourd’hui"
             ],
             SOCIAL: [
                 "Prendre un selfie avec un inconnu (co-pilote en arrière-plan).",
+                "Dire 'Petit cul va, belle gueule' à un inconnu dans la rue.",
                 "Faire un High Five à 3 inconnus différents.",
                 "Demander à un inconnu qui est le plus beau gosse entre vous deux.",
-                "Faire croire à quelqu'un que vous êtes des jumeaux séparés.",
                 "Demander une recommandation de lieu et s'y rendre direct.",
                 "Faire un compliment collectif à un passant.",
                 "Réussir à faire crier 'Vive le Marié' à un groupe d'inconnus.",
-                "Aborder quelqu'un et lui demander le secret d'une amitié longue.",
-                "Faire une photo 'affiche de film' avec un inconnu.",
+                "Faire un posing double-biceps dans la rue",
                 "Convaincre quelqu'un que vous tournez un vlog voyage.",
                 "Demander à un inconnu de vous apprendre un mot en croate.",
                 "Faire une 'ola' avec au moins 2 inconnus dans un lieu public.",
                 "Demander à quelqu'un son film préféré et pourquoi.",
                 "Demander à un inconnu de choisir le prochain défi du groupe.",
-                "Faire croire à quelqu'un que le Marié est une star de TikTok.",
-                "Obtenir un autographe d'un inconnu sur un bout de serviette.",
                 "Proposer un Pierre-Feuille-Ciseaux à un inconnu dans la rue.",
                 "Faire une haie d'honneur pour un inconnu qui passe.",
                 "Demander à une table voisine de porter un toast avec vous.",
@@ -230,23 +269,37 @@
             ]
         };
 
-        const icons = { SPORT: "💪", BAR: "🍺", SOCIAL: "🤝", AMITIE: "🧠", PHOTOS: "📸" };
+        const icons = { SPORT: "💪", BAR: "🍺", VERITE: "🤐", SOCIAL: "🤝", AMITIE: "🧠", PHOTOS: "📸" };
+        
+        // --- LOGIQUE DE PERSISTANCE ---
         let count = parseInt(localStorage.getItem('evg_gauntlet_score')) || 0;
-        document.getElementById('global-counter').innerText = count;
+        let participantIndex = parseInt(localStorage.getItem('evg_copilote_index')) || 0;
+
+        function updateDisplay() {
+            document.getElementById('global-counter').innerText = count;
+            document.getElementById('current-copilote').innerText = participants[participantIndex];
+        }
 
         function getRandomChallenge(cat) {
             const list = challenges[cat];
             const challenge = list[Math.floor(Math.random() * list.length)];
             document.getElementById('modal-icon').innerText = icons[cat];
             document.getElementById('modal-cat').innerText = "SECTEUR " + cat;
+            // On injecte le nom du copilote dans le texte si besoin, ou on le laisse tel quel
             document.getElementById('modal-text').innerText = challenge;
             document.getElementById('modal-challenge').classList.remove('hidden');
         }
 
         function validateMission() {
+            // Incrémenter le score
             count++;
             localStorage.setItem('evg_gauntlet_score', count);
-            document.getElementById('global-counter').innerText = count;
+            
+            // Passer au participant suivant (Rotation)
+            participantIndex = (participantIndex + 1) % participants.length;
+            localStorage.setItem('evg_copilote_index', participantIndex);
+            
+            updateDisplay();
             closeModal();
         }
 
@@ -255,12 +308,17 @@
         }
 
         function confirmReset() {
-            if(confirm("Réinitialiser le score à zéro ?")) {
+            if(confirm("Réinitialiser tout ? (Score à 0 et retour à Thibault)")) {
                 count = 0;
+                participantIndex = 0;
                 localStorage.setItem('evg_gauntlet_score', 0);
-                document.getElementById('global-counter').innerText = 0;
+                localStorage.setItem('evg_copilote_index', 0);
+                updateDisplay();
             }
         }
+
+        // Init au chargement
+        updateDisplay();
     </script>
 </body>
 </html>
