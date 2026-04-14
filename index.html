@@ -33,7 +33,7 @@
             </div>
         </div>
         <div class="text-[11px] text-right font-bold text-slate-400 uppercase leading-tight italic">
-            "Ce qui se passe en croatie, reste en croatie !"
+            "Ce qui se passe en croatie,<br>reste en croatie !"
         </div>
     </header>
 
@@ -47,7 +47,7 @@
         <div class="w-full max-w-sm space-y-3">
             <button onclick="getRandomChallenge('SPORT')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-blue-50 border-blue-200 shadow-sm shadow-blue-100">
                 <span class="text-2xl">💪</span>
-                <span class="font-black text-blue-800 uppercase text-sm tracking-widest">Secteur Sport (Dans la rue)</span>
+                <span class="font-black text-blue-800 uppercase text-sm tracking-widest">Secteur Sport (Rue)</span>
             </button>
 
             <button onclick="getRandomChallenge('BAR')" class="btn-cat w-full p-5 rounded-2xl flex items-center gap-4 bg-orange-50 border-orange-200 shadow-sm shadow-orange-100">
@@ -92,9 +92,13 @@
     </div>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- 1. DÉCLARATION DES VARIABLES (EN HAUT) ---
         const participants = ["Thibault", "Flo", "Bastien", "Djessy", "J-M", "Djany"];
+        const icons = { SPORT: "💪", BAR: "🍺", VERITE: "🤐", SOCIAL: "🤝", AMITIE: "🧠", PHOTOS: "📸" };
         
+        let count = parseInt(localStorage.getItem('evg_gauntlet_score')) || 0;
+        let participantIndex = parseInt(localStorage.getItem('evg_copilote_index')) || 0;
+
         const challenges = {
             SPORT: [
                 "Faire 20 pompes synchronisées avec ton co-pilote.",
@@ -118,7 +122,7 @@
                 "Faire 20 secondes de boxe imaginaire (shadow boxing) ensemble.",
                 "Faire une course de chenille (assis l'un derrière l'autre) sur 5m.",
                 "Course de reculons sur 20 mètres.",
-                "Faire 10 pompes avec une seule main au sol (ou essayer).",
+                "Faire 10 pompes avec une seule main au sol.",
                 "Tenir en équilibre 'avion' sur une jambe pendant 30 secondes.",
                 "Sauter 10 fois le plus haut possible en criant un cri de guerre.",
                 "Faire la course en sautant à cloche-pied sur 15 mètres."
@@ -128,22 +132,22 @@
                 "Commander une boisson avec un accent étranger au choix.",
                 "Cul sec en ayant aucune réaction (poker face).",
                 "Donner un nom ridicule à la prochaine tournée.",
-                "Le copilot dois faire un toast en l'honneur du marié.",
+                "Le copilot doit faire un toast en l'honneur du marié.",
                 "Boire uniquement avec votre main non-dominante pendant 10 min.",
-                "Racontez une blague nulle. Si ça fait rire, t’es sauvé. Sinon = shot",
+                "Racontez une blague nulle. Si ça fait rire, t’es sauvé. Sinon = shot.",
                 "Toucher le fond de votre verre avec le nez avant de le finir.",
                 "Le groupe choisit une règle débile pour votre prochain verre.",
                 "Pierre-Feuille-Ciseaux : le perdant finit le verre de l'autre.",
                 "Commander deux verres en chuchotant de manière suspecte.",
                 "Boire son verre cul-sec en gardant les yeux fermés.",
-                Faire un compliment sincère à un pote sinon 2 gorgés (on a dit sincère hein),
-                "Montrer la dernière photo dans ton téléphone (si refus = 2 shots)"
+                "Faire un compliment sincère à un pote sinon 2 gorgées.",
+                "Montrer la dernière photo dans ton téléphone (si refus = 2 shots).",
                 "Faire semblant d'être un critique de vin/bière pour votre boisson.",
                 "Demander au barman quelle est sa boisson la moins vendue et la goûter.",
-                "Dire un secret perso à chaque gorgé pendant 5min",
+                "Dire un secret perso à chaque gorgée pendant 5min.",
                 "Boire son verre à la paille le plus vite possible.",
                 "Inventer une légende croate sur votre boisson actuelle.",
-                "Faire un toast en rimes (min. 4 lignes).",
+                "Faire un toast en rimes (min. 4 lignes)."
             ],
             VERITE: [
                 "Le truc le plus bizarre que tu fais quand tu es seul ?",
@@ -153,29 +157,29 @@
                 "As-tu déjà reniflé tes vêtements pour voir s’ils étaient propres ? 😄",
                 "Le truc le plus inutile que tu sais faire ?",
                 "La pire excuse que tu as utilisée ?",
-                "Le moment où tu t’es senti vraiment idiot",
+                "Le moment où tu t’es senti vraiment idiot ?",
                 "Ton habitude la plus gênante ?",
                 "As-tu déjà ri à un moment totalement inapproprié ?",
                 "Le truc le plus bizarre que tu as mangé ?",
                 "As-tu déjà chanté très fort tout seul ?",
-                "Le truc le plus honteux que tu fais sur ton téléphone",
-                "Le truc le plus bizarre que tu fais quand tu t’ennuies",
+                "Le truc le plus honteux que tu fais sur ton téléphone ?",
+                "Le truc le plus bizarre que tu fais quand tu t’ennuies ?",
                 "As-tu déjà googlé un truc très bizarre ?",
-                "Le moment où tu as paniqué pour rien",
-                "Une peur ridicule que tu as",
-                "Le truc le plus étrange que tu fais quand tu es fatigué",
-                "Le pire moment où tu as eu un blanc total",
-                "Le truc le plus inutile que tu fais tous les jours",
-                "Une chose que tu fais mais que tu n’assumerais pas devant tout le monde",
-                "Le dernier truc ridicule que tu as fait sans t’en rendre compte",
-                "Le moment où tu as été le plus maladroit",
-                "Ton pire moment de honte en public",
-                "Le truc le plus bizarre que tu fais avant de dormir",
+                "Le moment où tu as paniqué pour rien ?",
+                "Une peur ridicule que tu as ?",
+                "Le truc le plus étrange que tu fais quand tu es fatigué ?",
+                "Le pire moment où tu as eu un blanc total ?",
+                "Le truc le plus inutile que tu fais tous les jours ?",
+                "Une chose que tu fais mais que tu n’assumerais pas ?",
+                "Le dernier truc ridicule que tu as fait sans t’en rendre compte ?",
+                "Le moment où tu as été le plus maladroit ?",
+                "Ton pire moment de honte en public ?",
+                "Le truc le plus bizarre que tu fais avant de dormir ?",
                 "As-tu déjà raconté une histoire en exagérant beaucoup ?",
-                "Le moment où tu a le plus surjoué une situation",
-                "Le truc le plus étrange que tu fais quand tu es stressé",
+                "Le moment où tu as le plus surjoué une situation ?",
+                "Le truc le plus étrange que tu fais quand tu es stressé ?",
                 "As-tu déjà jugé quelqu’un… puis fait exactement pareil ? 😅",
-                "Une chose ridicule que tu fais encore aujourd’hui"
+                "Une chose ridicule que tu fais encore aujourd’hui ?"
             ],
             SOCIAL: [
                 "Prendre un selfie avec un inconnu (co-pilote en arrière-plan).",
@@ -185,7 +189,7 @@
                 "Demander une recommandation de lieu et s'y rendre direct.",
                 "Faire un compliment collectif à un passant.",
                 "Réussir à faire crier 'Vive le Marié' à un groupe d'inconnus.",
-                "Faire un posing double-biceps dans la rue",
+                "Faire un posing double-biceps dans la rue.",
                 "Convaincre quelqu'un que vous tournez un vlog voyage.",
                 "Demander à un inconnu de vous apprendre un mot en croate.",
                 "Faire une 'ola' avec au moins 2 inconnus dans un lieu public.",
@@ -212,7 +216,7 @@
                 "Si vous deviez monter un business ensemble, ce serait quoi ?",
                 "Citer le défaut le plus drôle de ton co-pilote.",
                 "Raconter une anecdote d'enfance que ton co-pilote ne connaît pas.",
-                "Quel est le voyage que vous devez absolument faire ensemble un jour ?",
+                "Quel est le voyage que vous devez absolument faire ensemble ?",
                 "Dévoiler la chanson que vous chanteriez en duo au karaoké.",
                 "Raconter votre rencontre la plus improbable.",
                 "Qui de vous deux serait le premier à être arrêté en voyage ?",
@@ -238,10 +242,9 @@
                 "Faire une photo 'spy team' (mode agents secrets).",
                 "Faire une photo en mode 'gang'.",
                 "Faire une photo romantique exagérée entre potes.",
-                "Faire une photo où vous imitez une pub connue.",
                 "Faire une vidéo où vous dansez tous ensemble.",
                 "Faire une vidéo TikTok improvisée.",
-                "Faire une vidéo où vous faites semblant d’être bourrés (même sobres).",
+                "Faire une vidéo où vous faites semblant d’être bourrés.",
                 "Faire une vidéo 'challenge débile' inventé sur le moment.",
                 "Faire une photo avec le plus de monde possible dedans.",
                 "Faire une photo où chacun fait une grimace différente.",
@@ -250,7 +253,6 @@
                 "Faire une photo où vous imitez le marié.",
                 "Faire une photo du marié en mode 'roi'.",
                 "Faire une photo du marié porté par le groupe.",
-                "Faire une vidéo où vous racontez votre meilleur souvenir avec le marié.",
                 "Faire une vidéo message pour le futur (à regarder dans 5 ans).",
                 "Faire une photo artistique (ombres, reflet, etc.).",
                 "Faire une photo 'cinéma dramatique'.",
@@ -259,25 +261,20 @@
                 "Faire une vidéo où chacun a un surnom ridicule.",
                 "Faire une photo avec un maximum de sourires forcés.",
                 "Faire une photo 'photo de famille'.",
-                "Faire une photo 'classe de primaire'.",
                 "Faire une vidéo où vous criez tous 'VIVE LE MARIÉ'.",
                 "Faire une vidéo avec un cri de guerre inventé.",
-                "Faire une photo avec quelqu’un qui ne comprend rien à ce qu’il se passe.",
                 "Faire une photo en mode paparazzi du marié.",
-                "Faire une photo 'moment épique' (comme une affiche de film).",
                 "Faire une vidéo teaser de votre soirée."
             ]
         };
 
-        const icons = { SPORT: "💪", BAR: "🍺", VERITE: "🤐", SOCIAL: "🤝", AMITIE: "🧠", PHOTOS: "📸" };
-        
-        // --- LOGIQUE DE PERSISTANCE ---
-        let count = parseInt(localStorage.getItem('evg_gauntlet_score')) || 0;
-        let participantIndex = parseInt(localStorage.getItem('evg_copilote_index')) || 0;
-
+        // --- 2. FONCTIONS DE L'APP ---
         function updateDisplay() {
             document.getElementById('global-counter').innerText = count;
-            document.getElementById('current-copilote').innerText = participants[participantIndex];
+            // Vérification de sécurité pour éviter le "Chargement"
+            if(participants[participantIndex]) {
+                document.getElementById('current-copilote').innerText = participants[participantIndex];
+            }
         }
 
         function getRandomChallenge(cat) {
@@ -285,17 +282,15 @@
             const challenge = list[Math.floor(Math.random() * list.length)];
             document.getElementById('modal-icon').innerText = icons[cat];
             document.getElementById('modal-cat').innerText = "SECTEUR " + cat;
-            // On injecte le nom du copilote dans le texte si besoin, ou on le laisse tel quel
             document.getElementById('modal-text').innerText = challenge;
             document.getElementById('modal-challenge').classList.remove('hidden');
         }
 
         function validateMission() {
-            // Incrémenter le score
             count++;
             localStorage.setItem('evg_gauntlet_score', count);
             
-            // Passer au participant suivant (Rotation)
+            // Rotation du co-pilote
             participantIndex = (participantIndex + 1) % participants.length;
             localStorage.setItem('evg_copilote_index', participantIndex);
             
@@ -317,7 +312,7 @@
             }
         }
 
-        // Init au chargement
+        // --- 3. INITIALISATION ---
         updateDisplay();
     </script>
 </body>
